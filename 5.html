@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Slide 5 - DCA-RQ Technology (Responsive)</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+    /* 배경색 및 기본 설정 변경 */
+    body { 
+        margin: 0; 
+        padding: 0; 
+        background-color: #F7F9FC; 
+        display: flex; 
+        justify-content: center; 
+        align-items: flex-start; /* 모바일 스크롤을 위해 상단 정렬 */
+        min-height: 100vh; 
+        color: #1F2933; 
+        font-family: 'Noto Sans KR', sans-serif;
+    }
+    
+    .slide-container {
+        width: 100%;
+        max-width: 1122px; /* 최대 너비는 유지 */
+        min-height: 794px;
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        padding: 20px; /* 패널 여백 조정 */
+        box-sizing: border-box;
+    }
+
+    /* Header */
+    .header-section {
+        margin-bottom: 20px;
+        border-bottom: 2px solid #DDE3EA;
+        padding-bottom: 20px;
+        display: flex;
+        flex-wrap: wrap; /* 모바일에서 줄바꿈 허용 */
+        justify-content: space-between;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .header-title { color: #1F2933; }
+    .header-subtitle { color: #3b82f6; }
+
+    /* Main Content Layout - 반응형 핵심 */
+    .main-content {
+        display: flex;
+        flex-direction: row;
+        gap: 25px;
+        flex: 1;
+    }
+
+    /* Left Panel: Control Logic */
+    .control-panel {
+        width: 38%;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .monitor-box {
+        background-color: #DDE3EA;
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .logic-step {
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 12px;
+        padding: 12px;
+        margin-bottom: 10px;
+        border-left: 4px solid #CBD5E1;
+        display: flex;
+        align-items: center;
+    }
+    
+    .logic-step.active {
+        border-left-color: #3b82f6;
+        background-color: white;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    /* Right Panel: Sensor Stack Grid */
+    .sensor-grid-panel {
+        width: 62%;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 20px;
+    }
+
+    .sensor-card {
+        background-color: #DDE3EA;
+        border-radius: 20px;
+        padding: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        transition: transform 0.2s;
+    }
+
+    .sensor-card:hover {
+        transform: translateY(-5px);
+        background-color: #E2E8F0;
+    }
+
+    .sensor-value {
+        font-size: 32px;
+        font-weight: 800;
+        color: #1F2933;
+    }
+
+    .sensor-unit {
+        color: #64748b;
+        font-size: 14px;
+        margin-left: 5px;
+    }
+
+    .status-indicator {
+        padding: 4px 10px;
+        border-radius: 8px;
+        font-size: 11px;
+        font-weight: 700;
+        text-transform: uppercase;
+    }
+
+    .status-normal { background-color: #DCFCE7; color: #166534; }
+    .status-warning { background-color: #FEF3C7; color: #92400E; }
+    
+    .pulse-dot {
+        width: 10px;
+        height: 10px;
+        background-color: #3b82f6;
+        border-radius: 50%;
+        animation: pulse-blue 2s infinite;
+    }
+
+    @keyframes pulse-blue {
+        0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.4); }
+        70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+        100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    }
+
+    .chart-container {
+        width: 100%;
+        height: 200px;
+        margin-top: 15px;
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 12px;
+        padding: 10px;
+    }
+
+    /* Mobile Responsive Media Queries */
+    @media (max-width: 1024px) {
+        .main-content {
+            flex-direction: column;
+        }
+        .control-panel, .sensor-grid-panel {
+            width: 100%;
+        }
+        .slide-container {
+            height: auto;
+            overflow: visible;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .sensor-grid-panel {
+            grid-template-columns: 1fr;
+        }
+        .header-section {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        .header-title { font-size: 1.875rem; }
+        .header-subtitle { font-size: 1rem; }
+    }
+</style>
+</head>
+<body>
+<div class="slide-container">
+<div class="header-section">
+<div>
+<h1 class="text-3xl md:text-4xl font-black header-title mb-1">지능형 DCA저장고(DCA-RQ) 기술</h1>
+<p class="text-lg md:text-xl header-subtitle font-medium">생체 반응(Bio-Response) 기반 실시간 동적 제어 시스템</p>
+</div>
+<div class="flex items-center gap-3 bg-white px-4 py-2 rounded-full shadow-sm">
+<div class="pulse-dot"></div>
+<span class="text-slate-600 text-sm font-bold tracking-widest">SYSTEM ONLINE</span>
+</div>
+</div>
+
+<div class="main-content">
+<div class="control-panel">
+<div class="monitor-box">
+<h3 class="text-lg font-bold text-slate-800 mb-4 flex items-center">
+<i class="fas fa-microchip mr-2 text-blue-600"></i>Dynamic Control Logic
+                </h3>
+<div class="flex flex-col gap-2 mb-4">
+<div class="logic-step active">
+<i class="fas fa-chevron-circle-down text-blue-600 mr-3 text-xl"></i>
+<div>
+<p class="text-slate-900 text-sm font-bold">Step 1: O₂ 농도 점진적 하강</p>
+<p class="text-slate-500 text-xs">호흡 억제를 위한 극한 환경 조성</p>
+</div>
+</div>
+<div class="logic-step">
+<i class="fas fa-exclamation-circle text-amber-500 mr-3 text-xl"></i>
+<div>
+<p class="text-slate-900 text-sm font-bold">Step 2: 스트레스(RQ↑) 감지</p>
+<p class="text-slate-500 text-xs">혐기성 호흡 전환점(ACP) 포착</p>
+</div>
+</div>
+<div class="logic-step">
+<i class="fas fa-sync-alt text-emerald-600 mr-3 text-xl"></i>
+<div>
+<p class="text-slate-900 text-sm font-bold">Step 3: 안전 농도 복원</p>
+<p class="text-slate-500 text-xs">O₂ 농도 소폭 상승하여 장해 예방</p>
+</div>
+</div>
+</div>
+<div class="chart-container">
+<canvas id="dcaChart"></canvas>
+</div>
+</div>
+</div>
+
+<div class="sensor-grid-panel">
+<div class="sensor-card" style="border-top: 5px solid #3b82f6;">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-blue-100 text-blue-600 rounded-xl flex items-center justify-center text-2xl shadow-sm">
+<i class="fas fa-lungs"></i>
+</div>
+<span class="status-indicator status-normal">Stable</span>
+</div>
+<div>
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Respiratory Quotient</p>
+<h4 class="text-xl font-bold text-slate-800 mb-2">RQ 호흡률 센서</h4>
+<div class="flex items-baseline">
+<span class="sensor-value">1.05</span>
+<span class="sensor-unit">Ratio</span>
+</div>
+<p class="text-slate-500 text-xs mt-3 bg-white bg-opacity-40 p-2 rounded">
+<i class="fas fa-info-circle mr-1 text-blue-500"></i>CO₂ 배출량 / O₂ 소모량 비율
+                    </p>
+</div>
+</div>
+
+<div class="sensor-card" style="border-top: 5px solid #10b981;">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-emerald-100 text-emerald-600 rounded-xl flex items-center justify-center text-2xl shadow-sm">
+<i class="fas fa-leaf"></i>
+</div>
+<span class="status-indicator status-normal">Optimal</span>
+</div>
+<div>
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Stress Index</p>
+<h4 class="text-xl font-bold text-slate-800 mb-2">엽록소 형광 센서</h4>
+<div class="flex items-baseline">
+<span class="sensor-value">0.83</span>
+<span class="sensor-unit">Fv/Fm</span>
+</div>
+<p class="text-slate-500 text-xs mt-3 bg-white bg-opacity-40 p-2 rounded">
+<i class="fas fa-info-circle mr-1 text-emerald-500"></i>광합성 효율 기반 스트레스 측정
+                    </p>
+</div>
+</div>
+
+<div class="sensor-card" style="border-top: 5px solid #f59e0b;">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-amber-100 text-amber-600 rounded-xl flex items-center justify-center text-2xl shadow-sm">
+<i class="fas fa-vial"></i>
+</div>
+<span class="status-indicator status-warning">Monitoring</span>
+</div>
+<div>
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Fermentation</p>
+<h4 class="text-xl font-bold text-slate-800 mb-2">에탄올 감지기</h4>
+<div class="flex items-baseline">
+<span class="sensor-value">0.02</span>
+<span class="sensor-unit">ppm</span>
+</div>
+<p class="text-slate-500 text-xs mt-3 bg-white bg-opacity-40 p-2 rounded">
+<i class="fas fa-info-circle mr-1 text-amber-500"></i>저산소 장해 시 발생하는 발효산물
+                    </p>
+</div>
+</div>
+
+<div class="sensor-card" style="border-top: 5px solid #8b5cf6;">
+<div class="flex justify-between items-start mb-4">
+<div class="w-12 h-12 bg-purple-100 text-purple-600 rounded-xl flex items-center justify-center text-2xl shadow-sm">
+<i class="fas fa-wind"></i>
+</div>
+<span class="status-indicator status-normal">Controlled</span>
+</div>
+<div>
+<p class="text-slate-500 text-xs font-bold uppercase tracking-wider mb-1">Atmosphere</p>
+<h4 class="text-xl font-bold text-slate-800 mb-2">정밀 환경 센서</h4>
+<div class="flex gap-6">
+<div>
+<span class="block text-xs text-slate-500 font-bold">O₂</span>
+<span class="text-2xl font-bold text-slate-800">1.2<small class="text-sm ml-1">%</small></span>
+</div>
+<div>
+<span class="block text-xs text-slate-500 font-bold">Temp</span>
+<span class="text-2xl font-bold text-slate-800">0.5<small class="text-sm ml-1">℃</small></span>
+</div>
+</div>
+<p class="text-slate-500 text-xs mt-3 bg-white bg-opacity-40 p-2 rounded">
+<i class="fas fa-info-circle mr-1 text-purple-500"></i>O₂/CO₂ 및 온습도 정밀 제어
+                    </p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<script>
+    const ctx = document.getElementById('dcaChart').getContext('2d');
+    
+    new Chart(ctx, {
+        type: 'line',
+        data: {
+            labels: ['0h', '2h', '4h', '6h', '8h', '10h', '12h'],
+            datasets: [
+                {
+                    label: 'O₂ Level (%)',
+                    data: [5.0, 3.5, 2.0, 0.8, 0.6, 1.2, 1.2],
+                    borderColor: '#3b82f6',
+                    backgroundColor: 'rgba(59, 130, 246, 0.1)',
+                    borderWidth: 3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderWidth: 2,
+                    tension: 0.4,
+                    fill: true,
+                    yAxisID: 'y'
+                },
+                {
+                    label: 'RQ Value',
+                    data: [1.0, 1.0, 1.05, 1.1, 1.8, 1.1, 1.05],
+                    borderColor: '#f59e0b',
+                    borderDash: [5, 5],
+                    borderWidth: 3,
+                    pointBackgroundColor: '#fff',
+                    pointBorderWidth: 2,
+                    tension: 0.4,
+                    yAxisID: 'y1'
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'top',
+                    labels: { color: '#475569', font: { size: 10, weight: 'bold' } }
+                }
+            },
+            scales: {
+                x: {
+                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                    ticks: { color: '#64748b', font: { size: 10 } }
+                },
+                y: {
+                    position: 'left',
+                    grid: { color: 'rgba(0, 0, 0, 0.05)' },
+                    ticks: { color: '#3b82f6', font: { size: 10 } },
+                    min: 0, max: 6
+                },
+                y1: {
+                    position: 'right',
+                    grid: { display: false },
+                    ticks: { color: '#f59e0b', font: { size: 10 } },
+                    min: 0, max: 2.5
+                }
+            }
+        }
+    });
+</script>
+</body>
+</html>

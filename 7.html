@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Slide 7 - Quality Prediction Model (Responsive)</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    body { 
+        margin: 0; 
+        padding: 0; 
+        background-color: #F7F9FC; 
+        font-family: 'Noto Sans KR', sans-serif;
+    }
+    
+    .slide-container {
+        width: 100%;
+        max-width: 1122px; /* 최대 너비 제한 */
+        margin: 0 auto;
+        min-height: 100vh;
+        position: relative;
+        overflow: hidden;
+        background-color: #F7F9FC;
+        display: flex;
+        flex-direction: column;
+        padding: 40px 20px; /* 모바일 대응 패딩 */
+        box-sizing: border-box;
+    }
+
+    @media (min-width: 768px) {
+        .slide-container { padding: 55px 50px; }
+    }
+
+    .bg-pattern {
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(rgba(31, 41, 51, 0.05) 1px, transparent 1px);
+        background-size: 30px 30px;
+        z-index: 0;
+    }
+
+    .header-section {
+        position: relative;
+        z-index: 10;
+        margin-bottom: 25px;
+        border-bottom: 3px solid #DDE3EA;
+        padding-bottom: 15px;
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 15px;
+    }
+
+    .header-title { 
+        color: #1F2933; 
+        font-size: 1.75rem; /* 모바일 기본 크기 */
+        font-weight: 800; 
+        margin-bottom: 0.25rem;
+    }
+    @media (min-width: 768px) {
+        .header-title { font-size: 2.20rem; }
+    }
+
+    .header-subtitle { 
+        font-size: 0.9rem;
+        font-weight: 600; 
+        color: #3b82f6;
+    }
+
+    .canvas-grid {
+        position: relative;
+        z-index: 10;
+        display: grid;
+        grid-template-columns: 1fr; /* 모바일: 1열 */
+        gap: 20px;
+        flex: 1;
+    }
+    @media (min-width: 768px) {
+        .canvas-grid {
+            grid-template-columns: 1fr 1fr; /* 태블릿 이상: 2열 */
+            gap: 25px;
+        }
+    }
+
+    .quadrant-box {
+        background-color: #DDE3EA;
+        border-radius: 18px;
+        padding: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 4px 8px -1px rgba(0, 0, 0, 0.06);
+    }
+
+    .q-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 12px;
+        border-bottom: 2.5px solid rgba(0, 0, 0, 0.1);
+    }
+    .q-header h3 { color: #1F2933; font-size: 1.3rem; font-weight: 700; }
+
+    .q-icon {
+        width: 40px;
+        height: 40px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 12px;
+        font-size: 18px;
+        background-color: white;
+        flex-shrink: 0;
+    }
+
+    .feature-list {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: flex-start;
+        background-color: rgba(255, 255, 255, 0.55);
+        padding: 12px 15px;
+        border-radius: 10px;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+        gap: 12px;
+    }
+
+    .feature-item .main-title { color: #1F2933; font-size: 1.05rem; font-weight: 700; }
+    .feature-item .sub-desc { color: #475569; font-size: 0.8rem; margin-top: 2px; }
+
+    .check { font-size: 16px; margin-top: 4px; }
+    .theme-design .check, .theme-design .q-icon { color: #3b82f6; }
+    .theme-hardware .check, .theme-hardware .q-icon { color: #14b8a6; }
+    .theme-software .check, .theme-software .q-icon { color: #8b5cf6; }
+    .theme-validation .check, .theme-validation .q-icon { color: #f43f5e; }
+
+    .center-badge {
+        display: none; /* 모바일 레이아웃 방해 방지 위해 기본 숨김 */
+    }
+    @media (min-width: 1024px) {
+        .center-badge {
+            display: flex;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background-color: #3b82f6;
+            border-radius: 50%;
+            border: 5px solid #F7F9FC;
+            justify-content: center;
+            align-items: center;
+            z-index: 20;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.35);
+        }
+    }
+    
+    .center-icon { font-size: 34px; color: white; }
+    .output-desc { color: #e11d48; font-size: 0.8rem; font-weight: 600; display: block; margin-top: 2px; }
+
+    .badge-label, .badge-white {
+        font-size: 0.75rem;
+        padding: 4px 8px;
+    }
+    .badge-label { background-color: #1F2933; color: white; }
+    .badge-white { background-color: white; border: 1px solid #cbd5e1; color: #4b5563; }
+</style>
+</head>
+<body>
+<div class="slide-container">
+    <div class="bg-pattern"></div>
+    <header class="header-section">
+        <div>
+            <h1 class="header-title">농산물 품질예측모델 개발</h1>
+            <p class="header-subtitle">From 1st Gen Regression to 2nd Gen Integrated AI Model</p>
+        </div>
+        <div class="flex gap-2">
+            <span class="badge-label rounded font-mono">MODEL V2.0</span>
+            <span class="badge-white rounded font-mono">BIG DATA</span>
+        </div>
+    </header>
+
+    <div class="canvas-grid">
+        <div class="center-badge"><i class="fas fa-brain center-icon"></i></div>
+        
+        <section class="quadrant-box theme-design">
+            <div class="q-header">
+                <div class="q-icon"><i class="fas fa-history"></i></div>
+                <h3>1세대 모델 (Gen 1.0)</h3>
+            </div>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <i class="fas fa-calculator check"></i>
+                    <div>
+                        <p class="main-title">단순 회귀식 (Regression)</p>
+                        <p class="sub-desc">품질관리 계수 + 환경인자 기반</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-thermometer-half check"></i>
+                    <div>
+                        <p class="main-title">제한적 변수 고려</p>
+                        <p class="sub-desc">저장 환경(온도, O₂, CO₂) 중심 분석</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="quadrant-box theme-hardware">
+            <div class="q-header">
+                <div class="q-icon"><i class="fas fa-network-wired"></i></div>
+                <h3>2세대 모델 (Gen 2.0)</h3>
+            </div>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <i class="fas fa-layer-group check"></i>
+                    <div>
+                        <p class="main-title">전주기 통합 모델</p>
+                        <p class="sub-desc">재배-수확-선별-저장 전 과정 데이터 연계</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-microchip check"></i>
+                    <div>
+                        <p class="main-title">AI/ML 기반 고도화</p>
+                        <p class="sub-desc">복합 변수 분석을 통한 정밀 예측</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="quadrant-box theme-software">
+            <div class="q-header">
+                <div class="q-icon"><i class="fas fa-database"></i></div>
+                <h3>입력 데이터 (Input Data)</h3>
+            </div>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <i class="fas fa-cloud-sun check"></i>
+                    <div>
+                        <p class="main-title">생산 환경 및 재배 이력</p>
+                        <p class="sub-desc">기후, 토양 정보, 비료 및 방제 데이터</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-wifi check"></i>
+                    <div>
+                        <p class="main-title">저장 환경 센싱 로그</p>
+                        <p class="sub-desc">실시간 온도, 습도, O₂, CO₂ 변화량</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="quadrant-box theme-validation">
+            <div class="q-header">
+                <div class="q-icon"><i class="fas fa-chart-line"></i></div>
+                <h3>출력 및 활용 (Output)</h3>
+            </div>
+            <div class="feature-list">
+                <div class="feature-item">
+                    <i class="fas fa-file-medical-alt check"></i>
+                    <div>
+                        <p class="main-title">생리장해 발생 확률</p>
+                        <span class="output-desc">갈변, 위조 등 장해 위험 사전 경보</span>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-truck-loading check"></i>
+                    <div>
+                        <p class="main-title">최적 출하 시점 권고</p>
+                        <span class="output-desc">품질 기반 스마트 의사결정 지원</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>
+</body>
+</html>

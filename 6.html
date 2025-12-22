@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Slide 6 - DCA Method Canvas (Responsive)</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    body { margin: 0; padding: 0; background-color: #F7F9FC; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+    
+    .slide-container {
+        /* 반응형을 위해 너비를 100%로 변경하고 최대 너비를 설정 */
+        width: 100%;
+        max-width: 1122px;
+        min-height: 794px;
+        position: relative;
+        overflow: hidden;
+        background-color: #F7F9FC;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Noto Sans KR', sans-serif;
+        padding: 2rem;
+        box-sizing: border-box;
+    }
+
+    /* 모바일에서는 높이 고정을 해제하여 스크롤 가능하게 변경 */
+    @media (max-width: 768px) {
+        .slide-container {
+            min-height: auto;
+            padding: 1rem;
+        }
+    }
+
+    .bg-pattern {
+        position: absolute;
+        inset: 0;
+        background-image: radial-gradient(rgba(31, 41, 51, 0.05) 1px, transparent 1px);
+        background-size: 30px 30px;
+        z-index: 0;
+    }
+
+    .header-section {
+        position: relative;
+        z-index: 10;
+        margin-bottom: 20px;
+        border-bottom: 1px solid rgba(31, 41, 51, 0.1);
+        padding-bottom: 10px;
+        display: flex;
+        flex-wrap: wrap; /* 모바일 대응 */
+        justify-content: space-between;
+        align-items: flex-end;
+        gap: 10px;
+    }
+    
+    .text-main { color: #1F2933; }
+    .text-sub { color: #475a6b; }
+
+    .canvas-grid {
+        position: relative;
+        z-index: 10;
+        display: grid;
+        /* 태블릿 이하에서는 1열, 그 이상에서는 2열 */
+        grid-template-columns: repeat(1, minmax(0, 1fr));
+        gap: 20px;
+        flex: 1;
+    }
+
+    @media (min-width: 768px) {
+        .canvas-grid {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            grid-template-rows: 1fr 1fr;
+        }
+    }
+
+    .quadrant-box {
+        background-color: #DDE3EA;
+        border-radius: 16px;
+        padding: 20px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        display: flex;
+        flex-direction: column;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .q-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 15px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid rgba(0, 0, 0, 0.05);
+    }
+
+    .q-icon {
+        width: 36px;
+        height: 36px;
+        border-radius: 10px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-right: 12px;
+        flex-shrink: 0;
+    }
+
+    .feature-item {
+        display: flex;
+        align-items: center;
+        background-color: rgba(255, 255, 255, 0.5);
+        padding: 10px 14px;
+        border-radius: 8px;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+
+    .theme-design .q-header { border-color: rgba(59, 130, 246, 0.5); }
+    .theme-design .q-icon { background-color: #3b82f6; color: white; }
+    .theme-design .check { color: #3b82f6; margin-right: 12px; }
+
+    .theme-hardware .q-header { border-color: rgba(20, 184, 166, 0.5); }
+    .theme-hardware .q-icon { background-color: #14b8a6; color: white; }
+    .theme-hardware .check { color: #14b8a6; margin-right: 12px; }
+
+    .theme-software .q-header { border-color: rgba(139, 92, 246, 0.5); }
+    .theme-software .q-icon { background-color: #8b5cf6; color: white; }
+    .theme-software .check { color: #8b5cf6; margin-right: 12px; }
+
+    .theme-validation .q-header { border-color: rgba(244, 63, 94, 0.5); }
+    .theme-validation .q-icon { background-color: #f43f5e; color: white; }
+    .theme-validation .check { color: #f43f5e; margin-right: 12px; }
+
+    /* Validation Flow 모바일 최적화 */
+    .validation-flow-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-top: auto;
+        padding-bottom: 10px;
+        gap: 5px;
+    }
+
+    .flow-circle {
+        width: clamp(34px, 5vw, 44px);
+        height: clamp(34px, 5vw, 44px);
+        border-radius: 50%;
+        background-color: white;
+        border: 2px solid #f43f5e;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin: 0 auto 6px;
+        color: #f43f5e;
+        font-weight: bold;
+    }
+
+    .flow-arrow {
+        flex: 1;
+        height: 2px;
+        background-color: rgba(244, 63, 94, 0.3);
+        position: relative;
+        margin-bottom: 30px; /* 아이콘 하단 텍스트 공간 고려 */
+    }
+    
+    .flow-arrow::after {
+        content: '';
+        position: absolute;
+        right: 0;
+        top: -3px;
+        width: 6px;
+        height: 6px;
+        border-top: 2px solid rgba(244, 63, 94, 0.5);
+        border-right: 2px solid rgba(244, 63, 94, 0.5);
+        transform: rotate(45deg);
+    }
+
+    /* Center Badge: 모바일에서는 숨기거나 위치 조정 */
+    .center-badge {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 70px;
+        height: 70px;
+        background-color: #3b82f6;
+        border-radius: 50%;
+        border: 4px solid #F7F9FC;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        z-index: 20;
+        box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+    }
+
+    @media (max-width: 767px) {
+        .center-badge { display: none; } /* 모바일에서는 가독성을 위해 숨김 */
+    }
+</style>
+</head>
+<body>
+<div class="slide-container">
+    <div class="bg-pattern"></div>
+    <div class="header-section">
+        <div>
+            <h1 class="text-2xl md:text-4xl font-bold text-main mb-1">DCA 저장고 설계 및 검증</h1>
+            <p class="text-sm md:text-lg text-blue-600 font-medium">Design, Equipment, Software &amp; Validation Process</p>
+        </div>
+        <div class="flex gap-2">
+            <span class="px-3 py-1 bg-blue-100 border border-blue-300 rounded text-blue-700 text-xs font-mono font-bold">DCA-V3.0</span>
+            <span class="px-3 py-1 bg-gray-200 border border-gray-300 rounded text-gray-600 text-xs font-mono">INTEGRATION</span>
+        </div>
+    </div>
+
+    <div class="canvas-grid">
+        <div class="center-badge">
+            <i class="fas fa-network-wired center-icon text-white text-3xl"></i>
+        </div>
+
+        <div class="quadrant-box theme-design">
+            <div class="q-header">
+                <div class="q-icon"><i class="fas fa-drafting-compass"></i></div>
+                <h3 class="text-lg md:text-xl font-bold text-main">설계 포인트 (Design Points)</h3>
+            </div>
+            <div class="space-y-2">
+                <div class="feature-item">
+                    <i class="fas fa-th-large check"></i>
+                    <div>
+                        <p class="text-main font-bold text-sm">독립 존(Zone) 제어 설계</p>
+                        <p class="text-sub text-xs">품목별 최적 환경 유지를 위한 격실 구조</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-shield-alt check"></i>
+                    <div>
+                        <p class="text-main font-bold text-sm">고기밀성(Air-Tightness) 강화</p>
+                        <p class="text-sub text-xs">가스 누설률 1% 미만 목표 시공</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-wind check"></i>
+                    <div>
+                        <p class="text-main font-bold text-sm">균일 송풍 및 귀기 시스템</p>
+                        <p class="text-sub text-xs">사각지대 없는 3D 입체 기류 해석 적용</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quadrant-box theme-hardware">
+            <div class="q-header">
+                <div class="q-icon"><i class="fas fa-server"></i></div>
+                <h3 class="text-lg md:text-xl font-bold text-main">설비 구성 (Hardware)</h3>
+            </div>
+            <div class="space-y-2">
+                <div class="feature-item">
+                    <i class="fas fa-industry check"></i>
+                    <div>
+                        <p class="text-main font-bold text-sm">PSA 질소 발생기 (N₂ Generator)</p>
+                        <p class="text-sub text-xs">고순도(99.9%) 질소 생성 및 주입</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-filter check"></i>
+                    <div>
+                        <p class="text-main font-bold text-sm">CO₂ 스크러버 (Scrubber)</p>
+                        <p class="text-sub text-xs">활성탄 흡착 방식의 이산화탄소 제거</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-random check"></i>
+                    <div>
+                        <p class="text-main font-bold text-sm">가스 믹싱 챔버 &amp; 밸브 유닛</p>
+                        <p class="text-sub text-xs">정밀 혼합 및 자동 차압 조절 댐퍼</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quadrant-box theme-software">
+            <div class="q-header">
+                <div class="q-icon"><i class="fas fa-code"></i></div>
+                <h3 class="text-lg md:text-xl font-bold text-main">소프트웨어 (Software)</h3>
+            </div>
+            <div class="space-y-2">
+                <div class="feature-item">
+                    <i class="fas fa-robot check"></i>
+                    <div>
+                        <p class="text-main font-bold text-sm">RQ 연동 PID/MPC 제어</p>
+                        <p class="text-sub text-xs">호흡률 반응형 자동 농도 보정 알고리즘</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-bell check"></i>
+                    <div>
+                        <p class="text-main font-bold text-sm">이상징후 알람 &amp; 모바일 관제</p>
+                        <p class="text-sub text-xs">Push 알림 및 원격 제어 지원</p>
+                    </div>
+                </div>
+                <div class="feature-item">
+                    <i class="fas fa-database check"></i>
+                    <div>
+                        <p class="text-main font-bold text-sm">디지털 트윈 로그 (Digital Twin)</p>
+                        <p class="text-sub text-xs">전주기 데이터 저장 및 시뮬레이션</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="quadrant-box theme-validation">
+            <div class="q-header">
+                <div class="q-icon"><i class="fas fa-check-double"></i></div>
+                <h3 class="text-lg md:text-xl font-bold text-main">검증 절차 (Validation)</h3>
+            </div>
+            <div class="validation-flow-container">
+                <div class="text-center">
+                    <div class="flow-circle"><i class="fas fa-flask"></i></div>
+                    <p class="text-main font-bold text-[10px] md:text-xs">Pilot</p>
+                    <p class="text-sub text-[8px] md:text-[10px]">소규모</p>
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="text-center">
+                    <div class="flow-circle"><i class="fas fa-expand-arrows-alt"></i></div>
+                    <p class="text-main font-bold text-[10px] md:text-xs">Scale-up</p>
+                    <p class="text-sub text-[8px] md:text-[10px]">실증</p>
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="text-center">
+                    <div class="flow-circle"><i class="fas fa-chart-pie"></i></div>
+                    <p class="text-main font-bold text-[10px] md:text-xs">Quality</p>
+                    <p class="text-sub text-[8px] md:text-[10px]">품질평가</p>
+                </div>
+                <div class="flow-arrow"></div>
+                <div class="text-center">
+                    <div class="flow-circle"><i class="fas fa-bolt"></i></div>
+                    <p class="text-main font-bold text-[10px] md:text-xs">Energy</p>
+                    <p class="text-sub text-[8px] md:text-[10px]">효율분석</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>

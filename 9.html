@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Slide 9 - DCA vs CA Comparison</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    body { margin: 0; padding: 0; background-color: #F7F9FC; display: flex; justify-content: center; align-items: center; min-height: 100vh; }
+    
+    /* 반응형 컨테이너 설정 */
+    .slide-container {
+        width: 100%;
+        max-width: 1122px;
+        min-height: 794px;
+        position: relative;
+        overflow: hidden;
+        background-color: #F7F9FC;
+        display: flex;
+        flex-direction: column;
+        font-family: 'Noto Sans KR', sans-serif;
+        padding: 40px;
+        box-sizing: border-box;
+    }
+
+    /* Mobile Responsive 조정 */
+    @media (max-width: 1024px) {
+        .slide-container { height: auto; padding: 20px; }
+        .comparison-wrapper { flex-direction: column; gap: 20px; }
+        .center-axis { display: none; } /* 모바일에서는 중앙 축 숨김 */
+        .side-column { margin: 0 !important; width: 100%; }
+        .header-section h1 { font-size: 1.875rem; line-height: 2.25rem; }
+        .summary-box { flex-direction: column; text-align: center; }
+        .summary-box i { margin-bottom: 10px; margin-right: 0; }
+    }
+
+    .bg-grid {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-image: 
+            linear-gradient(rgba(0, 0, 0, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(0, 0, 0, 0.03) 1px, transparent 1px);
+        background-size: 40px 40px;
+        z-index: 0;
+    }
+
+    .glow-effect-left {
+        position: absolute;
+        top: 20%;
+        left: -10%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(16, 185, 129, 0.08) 0%, transparent 70%);
+        z-index: 0;
+    }
+
+    .glow-effect-right {
+        position: absolute;
+        bottom: -10%;
+        right: -10%;
+        width: 500px;
+        height: 500px;
+        background: radial-gradient(circle, rgba(249, 115, 22, 0.08) 0%, transparent 70%);
+        z-index: 0;
+    }
+
+    .header-section {
+        position: relative;
+        z-index: 10;
+        margin-bottom: 25px;
+        text-align: center;
+    }
+
+    .vs-badge {
+        background-color: #DDE3EA;
+        color: #475569;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: 700;
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        display: inline-block;
+        margin-bottom: 8px;
+    }
+
+    .header-section h1 { color: #1F2933; }
+    .header-section p { color: #475569; }
+
+    .comparison-wrapper {
+        display: flex;
+        justify-content: center;
+        gap: 0;
+        position: relative;
+        z-index: 10;
+        flex: 1;
+    }
+
+    .side-column {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        border-radius: 24px;
+        background-color: #DDE3EA;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+    }
+
+    .dca-column {
+        border-top: 4px solid #10b981;
+        margin-right: 5px;
+        background: linear-gradient(180deg, rgba(16, 185, 129, 0.05) 0%, #DDE3EA 100%);
+    }
+
+    .ca-column {
+        border-top: 4px solid #f97316;
+        margin-left: 5px;
+        background: linear-gradient(180deg, rgba(249, 115, 22, 0.05) 0%, #DDE3EA 100%);
+    }
+
+    .column-header {
+        display: flex;
+        align-items: center;
+        margin-bottom: 5px;
+        padding-bottom: 15px;
+        border-bottom: 1px dashed rgba(0, 0, 0, 0.1);
+    }
+
+    .header-icon {
+        width: 45px;
+        height: 45px;
+        border-radius: 12px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 22px;
+        margin-right: 15px;
+    }
+
+    .dca-icon { background-color: #ecfdf5; color: #059669; border: 1px solid #10b981; }
+    .ca-icon { background-color: #fff7ed; color: #ea580c; border: 1px solid #f97316; }
+
+    .comp-item {
+        background-color: rgba(255, 255, 255, 0.5);
+        border-radius: 12px;
+        padding: 14px;
+        display: flex;
+        align-items: flex-start;
+        flex: 1;
+        border: 1px solid rgba(255, 255, 255, 0.8);
+    }
+    
+    .item-icon {
+        margin-right: 12px;
+        margin-top: 2px;
+        font-size: 16px;
+    }
+
+    .comp-item h4 { color: #1F2933; }
+    .comp-item p, .comp-item li { color: #334155; }
+    .label-sub-dca { color: #059669; font-weight: 700; }
+    .label-sub-ca { color: #ea580c; font-weight: 700; }
+
+    .center-axis {
+        width: 70px;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        align-items: center;
+        padding: 80px 0 20px 0;
+        position: relative;
+    }
+
+    .axis-line {
+        position: absolute;
+        top: 60px;
+        bottom: 20px;
+        width: 2px;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.02), rgba(0,0,0,0.1), rgba(0,0,0,0.02));
+        z-index: 0;
+    }
+
+    .category-badge {
+        width: 54px;
+        height: 54px;
+        background-color: #DDE3EA;
+        border: 2px solid #cbd5e1;
+        border-radius: 50%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 2;
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    }
+
+    .badge-icon { font-size: 16px; color: #475569; margin-bottom: 2px; }
+    .badge-label { font-size: 9px; color: #64748b; font-weight: 700; }
+
+    .summary-box {
+        margin-top: 20px;
+        background-color: #DDE3EA;
+        border-radius: 12px;
+        padding: 12px 25px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px dashed rgba(100, 116, 139, 0.3);
+        z-index: 10;
+    }
+    .summary-text { color: #1F2933; }
+</style>
+</head>
+<body>
+<div class="slide-container">
+    <div class="bg-grid"></div>
+    <div class="glow-effect-left"></div>
+    <div class="glow-effect-right"></div>
+    
+    <div class="header-section">
+        <span class="vs-badge">COMPARISON MATRIX</span>
+        <h1 class="text-4xl font-bold mb-1">장기 저장용 DCA vs 수송용 CA 컨테이너</h1>
+        <p class="text-lg">비축 기지용 고정밀 저장 기술과 물류용 이동식 기술의 특성 비교</p>
+    </div>
+
+    <div class="comparison-wrapper">
+        <div class="side-column dca-column">
+            <div class="column-header">
+                <div class="header-icon dca-icon"><i class="fas fa-warehouse"></i></div>
+                <div>
+                    <h3 class="text-2xl font-bold text-emerald-600">DCA 저장고</h3>
+                    <p class="text-sm text-gray-500">Stationary / Long-term</p>
+                </div>
+            </div>
+            
+            <div class="comp-item">
+                <i class="fas fa-check-circle item-icon text-emerald-500"></i>
+                <div>
+                    <h4 class="font-bold text-lg mb-1">비축 및 수급 조절</h4>
+                    <p class="label-sub-dca text-xs opacity-80 mb-1">목적 (Purpose)</p>
+                    <p class="text-sm leading-snug">수확기 이후 장기간(6개월 이상) 품질을 유지하여 출하 시기를 조절하는 국가 비축 기지형 설비</p>
+                </div>
+            </div>
+
+            <div class="comp-item">
+                <i class="fas fa-microchip item-icon text-emerald-500"></i>
+                <div>
+                    <h4 class="font-bold text-lg mb-1">초정밀 동적 제어</h4>
+                    <p class="label-sub-dca text-xs opacity-80 mb-1">제어/센서 (Control)</p>
+                    <ul class="text-sm space-y-1 list-disc list-inside">
+                        <li>RQ(호흡률) 및 엽록소 형광 센서</li>
+                        <li>0.1℃ 온도, 0.1% 가스 농도 제어</li>
+                        <li>독립 존(Zone) 개별 제어 가능</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="comp-item">
+                <i class="fas fa-server item-icon text-emerald-500"></i>
+                <div>
+                    <h4 class="font-bold text-lg mb-1">대용량 유연 운영</h4>
+                    <p class="label-sub-dca text-xs opacity-80 mb-1">운영 (Operation)</p>
+                    <p class="text-sm leading-snug">수백 톤 단위의 대용량 적재가 가능하며, 다양한 품목을 구획별로 나누어 동시 저장 가능</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="center-axis">
+            <div class="axis-line"></div>
+            <div class="category-badge">
+                <i class="fas fa-bullseye badge-icon"></i>
+                <span class="badge-label">GOAL</span>
+            </div>
+            <div class="category-badge">
+                <i class="fas fa-sliders-h badge-icon"></i>
+                <span class="badge-label">TECH</span>
+            </div>
+            <div class="category-badge">
+                <i class="fas fa-cogs badge-icon"></i>
+                <span class="badge-label">OPS</span>
+            </div>
+        </div>
+
+        <div class="side-column ca-column">
+            <div class="column-header">
+                <div class="header-icon ca-icon"><i class="fas fa-truck-moving"></i></div>
+                <div>
+                    <h3 class="text-2xl font-bold text-orange-600">CA 컨테이너</h3>
+                    <p class="text-sm text-gray-500">Mobile / Transit</p>
+                </div>
+            </div>
+
+            <div class="comp-item">
+                <i class="fas fa-shipping-fast item-icon text-orange-500"></i>
+                <div>
+                    <h4 class="font-bold text-lg mb-1">수송 중 품질 유지</h4>
+                    <p class="label-sub-ca text-xs opacity-80 mb-1">목적 (Purpose)</p>
+                    <p class="text-sm leading-snug">산지에서 소비지(수출국)로 이동하는 유통 과정(2~4주) 동안 신선도를 유지하는 물류 장비</p>
+                </div>
+            </div>
+
+            <div class="comp-item">
+                <i class="fas fa-tachometer-alt item-icon text-orange-500"></i>
+                <div>
+                    <h4 class="font-bold text-lg mb-1">표준 설정값 유지</h4>
+                    <p class="label-sub-ca text-xs opacity-80 mb-1">제어/센서 (Control)</p>
+                    <ul class="text-sm space-y-1 list-disc list-inside">
+                        <li>기본 O₂/CO₂ 농도 센서</li>
+                        <li>설정값(Set-point) 기반 정속 운전</li>
+                        <li>단일 챔버 단일 제어</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="comp-item">
+                <i class="fas fa-cubes item-icon text-orange-500"></i>
+                <div>
+                    <h4 class="font-bold text-lg mb-1">단위 이동성 중심</h4>
+                    <p class="label-sub-ca text-xs opacity-80 mb-1">운영 (Operation)</p>
+                    <p class="text-sm leading-snug">20ft/40ft 표준 규격으로 이동이 용이하나, 컨테이너 당 단일 품목 적재가 일반적임</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="summary-box">
+        <i class="fas fa-info-circle text-blue-500 mr-3 text-xl"></i>
+        <p class="summary-text text-sm">
+            <span class="font-bold">Key Insight:</span>
+            DCA 저장고는 <span class="text-emerald-600 font-bold">"시간(Time)"</span>을 제어하여 저장 기간을 극대화하는 반면, 
+            CA 컨테이너는 <span class="text-orange-600 font-bold">"공간(Space)"</span>의 제약을 극복하며 신선도를 방어하는 역할을 수행합니다.
+        </p>
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>CA Storage System - Responsive</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet"/>
+    <link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+    <style>
+        body { 
+            margin: 0; 
+            padding: 0; 
+            background-color: #F7F9FC; 
+            color: #1F2933; 
+            font-family: 'Noto Sans KR', sans-serif;
+            display: flex;
+            justify-content: center;
+        }
+
+        .slide-container {
+            width: 100%;
+            max-width: 1122px; /* 데스크톱 최대 너비 제한 */
+            min-height: 100vh;
+            position: relative;
+            overflow: hidden;
+            background-color: #F7F9FC;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        /* Background Grid */
+        .bg-grid {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(203, 213, 225, 0.4) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(203, 213, 225, 0.4) 1px, transparent 1px);
+            background-size: 30px 30px;
+            z-index: 0;
+        }
+
+        .content-wrapper {
+            position: relative;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Header */
+        .header-section {
+            border-left: 6px solid #10b981;
+            padding-left: 15px;
+        }
+
+        /* Responsive Layouts */
+        .upper-section {
+            display: flex;
+            flex-direction: column; /* 기본 모바일 세로 */
+            gap: 20px;
+        }
+
+        @media (min-width: 768px) {
+            .upper-section {
+                flex-direction: row; /* 태블릿 이상 가로 */
+                height: auto;
+            }
+            .card-box-left { flex: 0 0 35%; }
+            .card-box-right { flex: 1; }
+        }
+
+        .card-box {
+            background-color: #DDE3EA;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Principle Visual */
+        .principle-visual {
+            display: flex;
+            align-items: center;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+        
+        .gas-meter {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            border: 5px solid;
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+
+        /* Device Grid */
+        .device-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr); /* 모바일 2열 */
+            gap: 10px;
+            margin-top: 12px;
+        }
+
+        @media (min-width: 640px) {
+            .device-grid { grid-template-columns: repeat(4, 1fr); } /* 데스크톱 4열 */
+        }
+
+        .device-item {
+            background-color: rgba(255, 255, 255, 0.6);
+            border-radius: 12px;
+            padding: 12px;
+            text-align: center;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+
+        /* Process Section */
+        .process-section {
+            background-color: #DDE3EA;
+            border-radius: 16px;
+            padding: 20px;
+        }
+
+        .steps-container {
+            display: flex;
+            flex-direction: column; /* 모바일 세로 */
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        @media (min-width: 768px) {
+            .steps-container {
+                flex-direction: row; /* 데스크톱 가로 */
+                justify-content: space-between;
+                padding: 10px 0;
+            }
+        }
+
+        .step-node {
+            width: 100%; /* 모바일 꽉 차게 */
+            max-width: 400px;
+            background-color: white;
+            border-radius: 12px;
+            padding: 18px;
+            position: relative;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        .step-node.active {
+            border: 2px solid #10b981;
+            box-shadow: 0 0 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .step-badge {
+            position: absolute;
+            top: -12px;
+            left: 15px;
+            background-color: #64748b;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 12px;
+        }
+
+        .active .step-badge { background-color: #10b981; }
+
+        .connector-line {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #cbd5e1;
+        }
+
+        @media (min-width: 768px) {
+            .connector-line { flex: 1; height: 3px; background-color: #cbd5e1; margin: 0 15px; position: relative; }
+            .active-connector { background-color: #10b981; }
+            .connector-arrow { position: absolute; right: -5px; top: 50%; transform: translateY(-50%); color: #10b981;}
+        }
+
+        /* Icon for mobile connector */
+        .mobile-arrow { display: block; font-size: 24px; }
+        @media (min-width: 768px) { .mobile-arrow { display: none; } }
+
+        /* Typography Adjustments */
+        .text-white { color: #1F2933 !important; }
+        .text-gray-400 { color: #475569 !important; }
+    </style>
+</head>
+<body>
+    <div class="slide-container">
+        <div class="bg-grid"></div>
+        <div class="content-wrapper">
+            <div class="header-section">
+                <h1 class="text-2xl md:text-3xl font-bold mb-1">CA 저장시스템</h1>
+                <p class="text-sm md:text-lg text-emerald-600 font-medium">기체 환경 제어를 통한 농산물 장기 저장 기술</p>
+            </div>
+
+            <div class="upper-section">
+                <div class="card-box card-box-left">
+                    <h3 class="text-md md:text-lg font-bold text-white mb-2"><i class="fas fa-flask mr-2 text-emerald-500"></i>저장 원리</h3>
+                    <div class="principle-visual">
+                        <div class="text-center">
+                            <div class="gas-meter border-blue-500 text-blue-500">
+                                <span class="text-lg font-bold">2~5%</span>
+                                <span style="font-size: 10px;" class="font-bold">저산소</span>
+                            </div>
+                            <p class="mt-2 text-xs font-bold">O₂ Down <i class="fas fa-arrow-down"></i></p>
+                        </div>
+                        <div class="text-center">
+                            <div class="gas-meter border-red-500 text-red-500">
+                                <span class="text-lg font-bold">2~5%</span>
+                                <span style="font-size: 10px;" class="font-bold">고이산화탄소</span>
+                            </div>
+                            <p class="mt-2 text-xs font-bold">CO₂ Up <i class="fas fa-arrow-up"></i></p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card-box card-box-right">
+                    <h3 class="text-md md:text-lg font-bold text-white mb-2"><i class="fas fa-microchip mr-2 text-emerald-500"></i>핵심 장치 구성</h3>
+                    <div class="device-grid">
+                        <div class="device-item">
+                            <i class="fas fa-wind text-xl text-blue-500 mb-1"></i>
+                            <p class="font-bold" style="font-size: 11px;">질소발생기</p>
+                        </div>
+                        <div class="device-item">
+                            <i class="fas fa-filter text-xl text-gray-500 mb-1"></i>
+                            <p class="font-bold" style="font-size: 11px;">CO₂ 제거기</p>
+                        </div>
+                        <div class="device-item">
+                            <i class="fas fa-biohazard text-xl text-yellow-600 mb-1"></i>
+                            <p class="font-bold" style="font-size: 11px;">에틸렌 제거기</p>
+                        </div>
+                        <div class="device-item">
+                            <i class="fas fa-door-closed text-xl text-emerald-500 mb-1"></i>
+                            <p class="font-bold" style="font-size: 11px;">고기밀 도어</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="process-section">
+                <h3 class="text-md md:text-lg font-bold text-white mb-4"><i class="fas fa-history mr-2 text-emerald-500"></i>기술 발전 단계</h3>
+                <div class="steps-container">
+                    <div class="step-node">
+                        <div class="step-badge">1세대</div>
+                        <h4 class="text-sm md:text-md font-bold mb-1">설정값 유지형 (Static)</h4>
+                        <p class="text-gray-500" style="font-size: 11px;">설정된 가스 농도를 기계적으로 유지</p>
+                    </div>
+                    
+                    <div class="connector-line active-connector">
+                        <i class="fas fa-chevron-down mobile-arrow"></i>
+                        <i class="fas fa-chevron-right connector-arrow hidden md:block"></i>
+                    </div>
+
+                    <div class="step-node active">
+                        <div class="step-badge">2세대 (New)</div>
+                        <h4 class="text-sm md:text-md font-bold mb-1">호흡률(RQ) 기반 동적 제어</h4>
+                        <p class="text-emerald-600 font-medium" style="font-size: 11px;">농산물 생리반응 실시간 감지 및 가변 운전</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

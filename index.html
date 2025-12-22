@@ -1,0 +1,617 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GreenVault - 지능형 장기비축 저장고</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* 기본 설정 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background-color: #F7F9FC;
+            color: #1F2933;
+            line-height: 1.5;
+            overflow-x: hidden;
+        }
+
+        /* Header & Navigation */
+        .header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-top {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 12px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 38px;
+            height: 38px;
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .logo-text h1 {
+            font-size: 22px;
+            color: #1F2933;
+            font-weight: 800;
+        }
+
+        .logo-text p {
+            font-size: 11px;
+            color: #64748b;
+        }
+
+        .header-contact {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border-radius: 6px;
+            border: none;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 13px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            color: white;
+        }
+
+        /* Navigation Menu */
+        .nav-menu {
+            background: #1F2933;
+            border-top: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: center;
+            overflow-x: auto;
+        }
+
+        .nav-item {
+            padding: 12px 18px;
+            color: rgba(255,255,255,0.7);
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 14px;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+        }
+
+        .nav-item:hover {
+            color: white;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .nav-item.active {
+            color: white;
+            border-bottom-color: #10b981;
+            background: rgba(16, 185, 129, 0.1);
+        }
+
+        /* Mobile Menu Toggle */
+        .menu-toggle {
+            display: none;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 12px;
+        }
+
+        .menu-toggle:hover {
+            color: #10b981;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #1F2933 0%, #2d3748 100%);
+            color: white;
+            padding: 15px 20px;
+            text-align: center;
+            position: relative;
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), margin-top 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.4s ease;
+            z-index: 10;
+            overflow: hidden;
+            height: auto;
+            max-height: 200px;
+        }
+
+        .hero.hide {
+            transform: translateY(-100%);
+            max-height: 0;
+            padding-top: 0;
+            padding-bottom: 0;
+            margin-top: 0;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .hero-content {
+            max-width: 900px;
+            margin: 0 auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero h2 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 5px;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
+        }
+
+        .hero p {
+            font-size: 14px;
+            opacity: 0.85;
+            margin-bottom: 10px;
+        }
+
+        .hero-tags {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            font-weight: 500;
+            border: 1px solid rgba(16, 185, 129, 0.4);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* Content Section */
+        .content-section {
+            display: none;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 40px;
+        }
+
+        .content-section.active {
+            display: block;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .slide-viewer {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+
+        .slide-viewer h3 {
+            font-size: 24px;
+            margin-bottom: 6px;
+            color: #1F2933;
+        }
+
+        .slide-viewer p {
+            color: #64748b;
+            margin-bottom: 20px;
+            font-size: 15px;
+        }
+
+        .slide-frame-container {
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+            background: #f1f3f5;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .slide-frame {
+            width: 100%;
+            height: 750px;
+            border: none;
+            border-radius: 5px;
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Footer */
+        .footer {
+            background: #1F2933;
+            color: white;
+            padding: 40px 40px 20px;
+            margin-top: 50px;
+        }
+
+        .footer-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .footer-section h4 {
+            font-size: 15px;
+            margin-bottom: 15px;
+            color: #10b981;
+        }
+
+        .footer-section p, .footer-section a {
+            color: rgba(255,255,255,0.6);
+            font-size: 13px;
+            line-height: 1.6;
+            text-decoration: none;
+            display: block;
+            margin-bottom: 8px;
+        }
+
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            text-align: center;
+            color: rgba(255,255,255,0.4);
+            font-size: 12px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header-top { 
+                padding: 10px 20px; 
+                flex-wrap: wrap;
+            }
+            
+            .header-contact {
+                flex-direction: column;
+                gap: 8px;
+                width: 100%;
+                margin-top: 10px;
+            }
+            
+            .menu-toggle {
+                display: block;
+            }
+            
+            .nav-menu {
+                position: relative;
+            }
+            
+            .nav-container {
+                display: none;
+                flex-direction: column;
+                width: 100%;
+                max-height: 0;
+                overflow: hidden;
+                transition: max-height 0.3s ease-out;
+            }
+            
+            .nav-container.active {
+                display: flex;
+                max-height: 600px;
+            }
+            
+            .nav-item {
+                width: 100%;
+                padding: 15px 20px;
+                border-bottom: 1px solid rgba(255,255,255,0.1);
+                border-left: 3px solid transparent;
+                justify-content: flex-start;
+            }
+            
+            .nav-item.active {
+                border-bottom-color: rgba(255,255,255,0.1);
+                border-left-color: #10b981;
+            }
+            
+            .hero h2 { font-size: 20px; }
+            .hero p { font-size: 13px; }
+            .slide-frame { height: 500px; }
+            .footer-content { grid-template-columns: 1fr; }
+            .content-section { padding: 20px 15px; }
+            .slide-viewer { padding: 20px 15px; }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-top">
+            <div class="logo">
+                <div class="logo-icon"><i class="fas fa-leaf"></i></div>
+                <div class="logo-text">
+                    <h1>GreenVault</h1>
+                    <p>신(新) 한국형 지능형 장기비축 저장고</p>
+                </div>
+            </div>
+            <div class="header-contact">
+                <img src="GREENVAULT.png" alt="GreenVault Logo" style="height: 40px; width: auto;">
+            </div>
+        </div>
+        
+        <nav class="nav-menu">
+            <button class="menu-toggle" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="nav-container" id="nav-container">
+                <a class="nav-item active" onclick="showSection('intro', this)"><i class="fas fa-home"></i> 소개</a>
+                <a class="nav-item" onclick="showSection('structure', this)"><i class="fas fa-sitemap"></i> 저장고 구조</a>
+                <a class="nav-item" onclick="showSection('ca-system', this)"><i class="fas fa-wind"></i> CA 시스템</a>
+                <a class="nav-item" onclick="showSection('dca-tech', this)"><i class="fas fa-brain"></i> DCA-RQ 기술</a>
+                <a class="nav-item" onclick="showSection('design', this)"><i class="fas fa-drafting-compass"></i> 설계 및 검증</a>
+                <a class="nav-item" onclick="showSection('ai-model', this)"><i class="fas fa-chart-line"></i> AI 품질예측</a>
+                <a class="nav-item" onclick="showSection('ma-film', this)"><i class="fas fa-box-open"></i> MA 필름기술</a>
+                <a class="nav-item" onclick="showSection('comparison', this)"><i class="fas fa-truck-loading"></i> DCA vs CA</a>
+                <a class="nav-item" onclick="showSection('network', this)"><i class="fas fa-network-wired"></i> 공급체계</a>
+                <a class="nav-item" onclick="showSection('achievement', this)"><i class="fas fa-star"></i> 핵심성과</a>
+                <a class="nav-item" onclick="showSection('roadmap', this)"><i class="fas fa-road"></i> 로드맵</a>
+            </div>
+        </nav>
+    </header>
+
+    <section class="hero" id="hero-section">
+        <div class="hero-content">
+            <h2>ColdRich를 이용한 GreenVault 장기비축 저장고</h2>
+            <p>Ai-Hybrid CA 기술로 농산물 신선도를 장기간 유지하는 혁신적인 저장 솔루션</p>
+            <div class="hero-tags">
+                <span class="tag"><i class="fas fa-microchip"></i> AI 기반 제어</span>
+                <span class="tag"><i class="fas fa-leaf"></i> 신선도 200% 향상</span>
+                <span class="tag"><i class="fas fa-bolt"></i> 에너지 20% 절감</span>
+                <span class="tag"><i class="fas fa-chart-line"></i> 품질 예측 모델</span>
+            </div>
+        </div>
+    </section>
+
+    <main id="main-content">
+        <div class="content-section active" id="intro">
+            <div class="slide-viewer">
+                <h3>GreenVault를 소개합니다</h3>
+                <p>신(新) 한국형 Ai-Hybrid CA 장기 비축 저장기술</p>
+                <div class="slide-frame-container">
+                    <iframe class="slide-frame" src="1.html"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="structure">
+            <div class="slide-viewer">
+                <h3>저온저장고의 구조 및 원리</h3>
+                <p>냉장 시스템의 핵심 메커니즘과 구성 요소</p>
+                <div class="slide-frame-container">
+                    <iframe class="slide-frame" src="3.html"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="ca-system">
+            <div class="slide-viewer">
+                <h3>CA 저장시스템의 원리 및 현황</h3>
+                <p>기체 환경 제어를 통한 장기 저장 기술</p>
+                <div class="slide-frame-container">
+                    <iframe class="slide-frame" src="4.html"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="dca-tech">
+            <div class="slide-viewer">
+                <h3>지능형 DCA저장고 (DCA-RQ) 기술</h3>
+                <p>생체 반응 기반 실시간 동적 제어 시스템</p>
+                <div class="slide-frame-container">
+                    <iframe class="slide-frame" src="5.html"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="design">
+            <div class="slide-viewer">
+                <h3>DCA 저장고 설계 및 검증</h3>
+                <p>설계 포인트, 장비 구성 및 검증 프로세스</p>
+                <div class="slide-frame-container">
+                    <iframe class="slide-frame" src="6.html"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="ai-model">
+            <div class="slide-viewer">
+                <h3>농산물 품질예측모델 개발</h3>
+                <p>2세대 통합 AI 모델로의 진화</p>
+                <div class="slide-frame-container">
+                    <iframe class="slide-frame" src="7.html"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="ma-film">
+            <div class="slide-viewer">
+                <h3>배추 MA 팔레트 필름 저장기술</h3>
+                <p>Modified Atmosphere Packaging 실증 데이터</p>
+                <div class="slide-frame-container">
+                    <iframe class="slide-frame" src="8.html"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="comparison">
+            <div class="slide-viewer">
+                <h3>장기 저장용 DCA vs 수송용 CA</h3>
+                <p>비축용과 물류용 기술의 차이 분석</p>
+                <div class="slide-frame-container">
+                    <iframe class="slide-frame" src="9.html"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="network">
+            <div class="slide-viewer">
+                <h3>저장·유통기술 및 권역별 공급체계</h3>
+                <p>Hub-Spoke 네트워크와 디지털 운영 표준</p>
+                <div class="slide-frame-container">
+                    <iframe class="slide-frame" src="10.html"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="achievement">
+            <div class="slide-viewer">
+                <h3>핵심 성과 및 요약</h3>
+                <p>기술 혁신 및 대표 성과</p>
+                <div class="slide-frame-container">
+                    <iframe class="slide-frame" src="11.html"></iframe>
+                </div>
+            </div>
+        </div>
+
+        <div class="content-section" id="roadmap">
+            <div class="slide-viewer">
+                <h3>도입 로드맵 및 KPI</h3>
+                <p>단계별 확산 전략과 핵심 성과 목표</p>
+                <div class="slide-frame-container">
+                    <iframe class="slide-frame" src="12.html"></iframe>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h4>GreenVault 소개</h4>
+                <p>농업회사법인 CAF 주식회사가 보유하고 있는 HybridCA 장기 비축 기술을 적용한 농산물 장기저장용 특수저장고 브랜드 입니다.</p>
+                <p>AI Agent 인 ColdRich 를 통해 실시간 관리되고 있으며, 모든 저장과정이 완전 자동화된 스마트 농산물 특수저장고 입니다.</p>
+            </div>
+            <div class="footer-section">
+                <h4>관련 사이트</h4>
+                <a href="http://www.caf.ai.kr" target="_blank">CAF Home</a>
+                <a href="https://caflab.my.canva.site/cafkr" target="_blank">CAF Mobile</a>
+                <a href="https://jy-jeon65.github.io/DCA-RQ/" target="_blank">ColdRich AI Platform</a>
+            </div>
+            <div class="footer-section">
+                <h4>문의</h4>
+                <p>농업회사법인 CAF 주식회사</p>
+                <p>이메일: cafaikr@gmail.com</p>
+            </div>
+            <div class="footer-section">
+                <h4>수익형 GreenVault 귀농 프로젝트</h4>
+                <a href="CAF귀농프로젝트설명서.pdf" download="CAF귀농프로젝트설명서.pdf">CAF 귀농 프로젝트 설명서</a>
+                <a href="CAF귀농요약집.pdf" download="CAF귀농요약집.pdf">CAF 귀농 요약집</a>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2026 농업회사법인 CAF 주식회사. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        const hero = document.getElementById('hero-section');
+        let isHeroActive = true;
+
+        // 마우스 움직임 감지 시 히어로 숨기기 로직
+        function handleMouseMove() {
+            if (isHeroActive) {
+                hero.classList.add('hide');
+                isHeroActive = false;
+                window.removeEventListener('mousemove', handleMouseMove);
+            }
+        }
+
+        // 초기 로드 시 마우스 움직임 감지 시작
+        window.addEventListener('mousemove', handleMouseMove);
+
+        // 모바일 메뉴 토글
+        function toggleMenu() {
+            const navContainer = document.getElementById('nav-container');
+            navContainer.classList.toggle('active');
+        }
+
+        function showSection(sectionId, element) {
+            // 모든 섹션 비활성화
+            document.querySelectorAll('.content-section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 선택한 섹션 활성화
+            document.getElementById(sectionId).classList.add('active');
+            if(element) element.classList.add('active');
+            
+            // 모바일에서 메뉴 선택 시 메뉴 닫기
+            if (window.innerWidth <= 768) {
+                const navContainer = document.getElementById('nav-container');
+                navContainer.classList.remove('active');
+            }
+            
+            // '소개(intro)'를 눌렀을 때만 히어로 섹션 다시 표시
+            if (sectionId === 'intro') {
+                hero.classList.remove('hide');
+                isHeroActive = true;
+                // 다시 마우스 움직임을 감시하도록 이벤트 리스너 재등록
+                window.addEventListener('mousemove', handleMouseMove);
+            } else {
+                // 다른 섹션 클릭 시 히어로 숨김 유지
+                hero.classList.add('hide');
+                isHeroActive = false;
+            }
+            
+            // 페이지 상단으로 이동
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+    </script>
+</body>
+</html>

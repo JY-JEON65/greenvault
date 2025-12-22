@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Slide 2 - Agenda Responsive</title>
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" rel="stylesheet"/>
+<style>
+    body { 
+        margin: 0; 
+        padding: 0; 
+        background-color: #E2E8F0; 
+        display: flex;
+        justify-content: center;
+        align-items: flex-start; /* 모바일 스크롤 대비 */
+        min-height: 100vh;
+        font-family: 'Noto Sans KR', sans-serif;
+    }
+    
+    .slide-container {
+        width: 100%;
+        max-width: 1122px;
+        min-height: 794px;
+        position: relative;
+        overflow: hidden;
+        background-color: #F7F9FC;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+    }
+
+    /* Background Accents */
+    .bg-accent-right {
+        position: absolute;
+        top: 0;
+        right: 0;
+        width: 30%;
+        height: 100%;
+        background-color: #DDE3EA;
+        z-index: 0;
+        opacity: 0.5;
+    }
+    
+    .bg-circle-top {
+        position: absolute;
+        top: -100px;
+        left: -100px;
+        width: 300px;
+        height: 300px;
+        border: 2px solid rgba(59, 130, 246, 0.1);
+        border-radius: 50%;
+        z-index: 0;
+    }
+
+    .content-wrapper {
+        position: relative;
+        z-index: 10;
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        padding: 40px 20px;
+    }
+
+    @media (min-width: 1024px) {
+        .content-wrapper { padding: 60px 40px; }
+    }
+
+    .header-section {
+        margin-bottom: 30px;
+        border-left: 6px solid #3b82f6;
+        padding-left: 20px;
+    }
+
+    /* 반응형 그리드 시스템 */
+    .grid-container {
+        display: grid;
+        grid-template-columns: 1fr; /* 모바일: 1열 */
+        gap: 12px;
+        padding: 0;
+    }
+
+    @media (min-width: 768px) {
+        .grid-container {
+            grid-template-columns: 1fr 1fr; /* 태블릿/PC: 2열 */
+            gap: 20px 30px;
+        }
+    }
+
+    .agenda-item {
+        display: flex;
+        align-items: center;
+        padding: 12px 16px;
+        background-color: #DDE3EA;
+        border-radius: 12px;
+        border: 1px solid rgba(0, 0, 0, 0.05);
+        transition: transform 0.2s ease;
+    }
+    
+    .agenda-item:hover { transform: translateX(5px); }
+
+    .agenda-number {
+        font-weight: 900;
+        font-size: 20px;
+        color: #3b82f6;
+        margin-right: 12px;
+        min-width: 30px;
+    }
+
+    .agenda-icon {
+        width: 32px;
+        height: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: rgba(59, 130, 246, 0.1);
+        border-radius: 8px;
+        color: #3b82f6;
+        margin-right: 12px;
+        font-size: 14px;
+        flex-shrink: 0;
+    }
+
+    .agenda-title {
+        font-size: 15px;
+        font-weight: 500;
+        color: #1F2933;
+        margin: 0;
+        line-height: 1.4;
+    }
+
+    /* PC 텍스트 크기 상향 조정 */
+    @media (min-width: 1024px) {
+        .agenda-number { font-size: 26px; min-width: 40px; }
+        .agenda-icon { width: 36px; height: 36px; font-size: 16px; }
+        .agenda-title { font-size: 17px; }
+        .header-section h1 { font-size: 3rem; }
+    }
+</style>
+</head>
+<body>
+<div class="slide-container">
+    <div class="bg-accent-right"></div>
+    <div class="bg-circle-top"></div>
+    <div class="content-wrapper">
+        <div class="header-section">
+            <h1 class="text-3xl md:text-5xl font-bold text-gray-900 mb-2" style="color: #1F2933;">목차 및 개요</h1>
+            <p class="text-sm md:text-xl font-medium" style="color: #3b82f6;">ColdRich를 이용한 GreenVault 실증 Project</p>
+        </div>
+        
+        <div class="grid-container">
+            <div class="agenda-item">
+                <div class="agenda-number">01</div>
+                <div class="agenda-icon"><i class="fas fa-warehouse"></i></div>
+                <div class="agenda-content"><p class="agenda-title">저온저장고의 구조 및 원리</p></div>
+            </div>
+            <div class="agenda-item">
+                <div class="agenda-number">02</div>
+                <div class="agenda-icon"><i class="fas fa-wind"></i></div>
+                <div class="agenda-content"><p class="agenda-title">CA 저장시스템의 원리 및 현황</p></div>
+            </div>
+            <div class="agenda-item">
+                <div class="agenda-number">03</div>
+                <div class="agenda-icon"><i class="fas fa-brain"></i></div>
+                <div class="agenda-content"><p class="agenda-title">지능형 DCA저장고(DCA-RQ) 기술</p></div>
+            </div>
+            <div class="agenda-item">
+                <div class="agenda-number">04</div>
+                <div class="agenda-icon"><i class="fas fa-drafting-compass"></i></div>
+                <div class="agenda-content"><p class="agenda-title">DCA 저장고 설계 및 검증</p></div>
+            </div>
+            <div class="agenda-item">
+                <div class="agenda-number">05</div>
+                <div class="agenda-icon"><i class="fas fa-chart-line"></i></div>
+                <div class="agenda-content"><p class="agenda-title">농산물 품질예측모델 개발</p></div>
+            </div>
+            <div class="agenda-item">
+                <div class="agenda-number">06</div>
+                <div class="agenda-icon"><i class="fas fa-box-open"></i></div>
+                <div class="agenda-content"><p class="agenda-title">배추 MA 팔레트 필름 저장기술</p></div>
+            </div>
+            <div class="agenda-item">
+                <div class="agenda-number">07</div>
+                <div class="agenda-icon"><i class="fas fa-truck-loading"></i></div>
+                <div class="agenda-content"><p class="agenda-title">장기 저장용 vs 수송용 CA 비교</p></div>
+            </div>
+            <div class="agenda-item">
+                <div class="agenda-number">08</div>
+                <div class="agenda-icon"><i class="fas fa-network-wired"></i></div>
+                <div class="agenda-content"><p class="agenda-title">저장·유통기술 및 권역별 공급체계</p></div>
+            </div>
+            <div class="agenda-item">
+                <div class="agenda-number">09</div>
+                <div class="agenda-icon"><i class="fas fa-star"></i></div>
+                <div class="agenda-content"><p class="agenda-title">핵심 성과 및 요약</p></div>
+            </div>
+            <div class="agenda-item">
+                <div class="agenda-number">10</div>
+                <div class="agenda-icon"><i class="fas fa-road"></i></div>
+                <div class="agenda-content"><p class="agenda-title">도입 로드맵 및 KPI</p></div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
